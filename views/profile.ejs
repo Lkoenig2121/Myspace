@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= user.display_name %>'s MySpace Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <% if (profile.custom_css) { %>
+    <style>
+      <%= profile.custom_css %>
+    </style>
+    <% } %>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <% if (currentUser) { %>
+    <nav
+      class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+    >
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between py-4">
+          <div class="text-2xl font-bold">
+            <a href="/" class="hover:text-blue-200 transition">MySpace</a>
+          </div>
+          <div class="flex items-center space-x-6">
+            <a href="/" class="hover:text-blue-200 transition font-semibold"
+              >Home</a
+            >
+            <a
+              href="/profile/<%= currentUser.username %>"
+              class="hover:text-blue-200 transition font-semibold"
+              >My Profile</a
+            >
+            <a
+              href="/profile/edit"
+              class="hover:text-blue-200 transition font-semibold"
+              >Edit Profile</a
+            >
+            <a
+              href="/auth/logout"
+              class="hover:text-blue-200 transition font-semibold"
+              >Logout</a
+            >
+          </div>
+          <div class="text-sm">
+            Welcome, <strong><%= currentUser.displayName %></strong>!
+          </div>
+        </div>
+      </div>
+    </nav>
+    <% } %>
+
+    <div class="container mx-auto px-4 py-8">
+      <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div
+          class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-8 text-white"
+        >
+          <h1 class="text-5xl font-bold mb-2"><%= user.display_name %></h1>
+          <p class="text-xl text-blue-100 mb-4">@<%= user.username %></p>
+          <% if (profile.mood) { %>
+          <p class="text-lg mb-2">
+            Mood: <span class="font-semibold"><%= profile.mood %></span>
+          </p>
+          <% } %> <% if (profile.location) { %>
+          <p class="text-lg">📍 <%= profile.location %></p>
+          <% } %> <% if (isOwnProfile) { %>
+          <a
+            href="/profile/edit"
+            class="inline-block mt-4 bg-white text-blue-600 font-bold py-2 px-6 rounded-lg hover:bg-blue-50 transition"
+          >
+            Edit Profile
+          </a>
+          <% } %>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-blue-500">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">About Me</h2>
+              <div class="text-gray-700 whitespace-pre-wrap">
+                <%= profile.bio || 'No bio yet!' %>
+              </div>
+            </div>
+
+            <% if (profile.custom_html) { %>
+            <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-purple-500">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                My Custom Section
+              </h2>
+              <div class="custom-html"><%- profile.custom_html %></div>
+            </div>
+            <% } %> <% if (profile.profile_song) { %>
+            <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-pink-500">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                🎵 My Profile Song
+              </h2>
+              <p class="text-gray-700 text-lg"><%= profile.profile_song %></p>
+            </div>
+            <% } %>
+          </div>
+
+          <div class="lg:col-span-1">
+            <div
+              class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200"
+            >
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                Top 8 Friends
+              </h2>
+              <% if (top8.length > 0) { %>
+              <div class="grid grid-cols-2 gap-3">
+                <% top8.forEach(friend => { %>
+                <a
+                  href="/profile/<%= friend.username %>"
+                  class="bg-white rounded-lg p-3 text-center hover:shadow-lg transition-shadow border border-blue-200"
+                >
+                  <div class="font-semibold text-gray-800 text-sm">
+                    <%= friend.display_name %>
+                  </div>
+                </a>
+                <% }) %>
+              </div>
+              <% } else { %>
+              <p class="text-gray-600 text-center py-8">No friends yet!</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

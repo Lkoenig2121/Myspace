@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile - MySpace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <nav
+      class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+    >
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between py-4">
+          <div class="text-2xl font-bold">
+            <a href="/" class="hover:text-blue-200 transition">MySpace</a>
+          </div>
+          <div class="flex items-center space-x-6">
+            <a href="/" class="hover:text-blue-200 transition font-semibold"
+              >Home</a
+            >
+            <a
+              href="/profile/<%= currentUser.username %>"
+              class="hover:text-blue-200 transition font-semibold"
+              >My Profile</a
+            >
+            <a
+              href="/profile/edit"
+              class="hover:text-blue-200 transition font-semibold"
+              >Edit Profile</a
+            >
+            <a
+              href="/auth/logout"
+              class="hover:text-blue-200 transition font-semibold"
+              >Logout</a
+            >
+          </div>
+          <div class="text-sm">
+            Welcome, <strong><%= currentUser.displayName %></strong>!
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <div class="bg-white rounded-lg shadow-xl p-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Edit Your Profile</h1>
+        <p class="text-xl text-gray-600 mb-8">
+          Customize your MySpace like it's 2005! 🎨
+        </p>
+
+        <form method="POST" action="/profile/update">
+          <div class="mb-8">
+            <h2
+              class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-blue-500"
+            >
+              Basic Info
+            </h2>
+
+            <div class="mb-4">
+              <label for="mood" class="block text-gray-700 font-semibold mb-2"
+                >Current Mood:</label
+              >
+              <input
+                type="text"
+                id="mood"
+                name="mood"
+                value="<%= profile.mood || '' %>"
+                placeholder="chillin, excited, nostalgic..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="location"
+                class="block text-gray-700 font-semibold mb-2"
+                >Location:</label
+              >
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value="<%= profile.location || '' %>"
+                placeholder="Your city or state"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="bio" class="block text-gray-700 font-semibold mb-2"
+                >About Me:</label
+              >
+              <textarea
+                id="bio"
+                name="bio"
+                rows="5"
+                placeholder="Tell everyone about yourself!"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+<%= profile.bio || '' %></textarea
+              >
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="profileSong"
+                class="block text-gray-700 font-semibold mb-2"
+                >Profile Song:</label
+              >
+              <input
+                type="text"
+                id="profileSong"
+                name="profileSong"
+                value="<%= profile.profile_song || '' %>"
+                placeholder="Artist - Song Name"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <small class="text-gray-600"
+                >The song that plays when people visit your profile
+                (conceptually!)</small
+              >
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h2
+              class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-purple-500"
+            >
+              🎨 Custom HTML
+            </h2>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+              <p class="text-yellow-800 font-semibold">
+                ⚠️ This is where the magic happens! Add your custom HTML here.
+                Be creative!
+              </p>
+              <p class="text-yellow-700 text-sm mt-1">
+                (Just like the old days - but be careful, it will render exactly
+                as you type it!)
+              </p>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="customHtml"
+                class="block text-gray-700 font-semibold mb-2"
+                >Custom HTML:</label
+              >
+              <textarea
+                id="customHtml"
+                name="customHtml"
+                rows="10"
+                placeholder="<h3>My Cool Section</h3>
+<p>Check out my awesome content!</p>
+<marquee>Welcome to my page!</marquee>"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              >
+<%= profile.custom_html || '' %></textarea
+              >
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h2
+              class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-pink-500"
+            >
+              🎨 Custom CSS
+            </h2>
+            <div class="bg-pink-50 border-l-4 border-pink-400 p-4 mb-4">
+              <p class="text-pink-800 font-semibold">
+                ⚠️ Advanced: Add your custom CSS styles here!
+              </p>
+              <p class="text-pink-700 text-sm mt-1">
+                Change colors, fonts, backgrounds - make it YOUR space!
+              </p>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="customCss"
+                class="block text-gray-700 font-semibold mb-2"
+                >Custom CSS:</label
+              >
+              <textarea
+                id="customCss"
+                name="customCss"
+                rows="10"
+                placeholder="body {
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+}
+
+.profile-container {
+  border: 3px dotted hotpink;
+}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 font-mono text-sm"
+              >
+<%= profile.custom_css || '' %></textarea
+              >
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-200"
+            >
+              Save Changes
+            </button>
+            <a
+              href="/profile/<%= currentUser.username %>"
+              class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition duration-200"
+            >
+              Cancel
+            </a>
+          </div>
+        </form>
+
+        <div class="mt-12 bg-blue-50 rounded-lg p-6 border border-blue-200">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">
+            💡 Tips for Customizing:
+          </h3>
+          <ul class="space-y-2 text-gray-700">
+            <li>
+              • Use
+              <code class="bg-gray-200 px-2 py-1 rounded">&lt;marquee&gt;</code>
+              tags for that authentic 2005 feel!
+            </li>
+            <li>
+              • Add
+              <code class="bg-gray-200 px-2 py-1 rounded">&lt;blink&gt;</code>
+              tags (they might not work in modern browsers, but it's fun to
+              try!)
+            </li>
+            <li>
+              • Embed images with
+              <code class="bg-gray-200 px-2 py-1 rounded"
+                >&lt;img src="url"&gt;</code
+              >
+            </li>
+            <li>
+              • Create tables with
+              <code class="bg-gray-200 px-2 py-1 rounded">&lt;table&gt;</code>
+              for layout (just like old times!)
+            </li>
+            <li>
+              • In CSS, try wild gradients, background images, and custom fonts
+            </li>
+            <li>
+              • Change text colors with
+              <code class="bg-gray-200 px-2 py-1 rounded">color</code> and
+              backgrounds with
+              <code class="bg-gray-200 px-2 py-1 rounded">background</code>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
