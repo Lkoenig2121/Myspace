@@ -186,6 +186,16 @@ myspace/
 - Music player integration
 - Themes and pre-made templates
 
+## Deployment 🚀
+
+Want to deploy this to the web? Check out the [DEPLOYMENT.md](DEPLOYMENT.md) guide for instructions on deploying to:
+- Render (recommended, free tier available)
+- Railway
+- Heroku
+- Fly.io
+
+The app is production-ready and includes automatic database seeding!
+
 ## License
 
 MIT
