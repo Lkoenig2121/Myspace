@@ -3,3 +3,4 @@ node_modules/
 sessions.db
 .DS_Store
 .env
+ 

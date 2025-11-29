@@ -48,3 +48,4 @@ app.listen(PORT, async () => {
   // Seed database with demo user
   await seedDatabase();
 });
+ 
