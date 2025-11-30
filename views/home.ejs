@@ -5,42 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MySpace - Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body class="bg-gray-100 min-h-screen">
-    <nav
-      class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-    >
+    <nav class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between py-4">
+          <!-- Logo -->
           <div class="text-2xl font-bold">
             <a href="/" class="hover:text-blue-200 transition">MySpace</a>
           </div>
-          <div class="flex items-center space-x-6">
-            <a href="/" class="hover:text-blue-200 transition font-semibold"
-              >Home</a
-            >
-            <a
-              href="/profile/<%= currentUser.username %>"
-              class="hover:text-blue-200 transition font-semibold"
-              >My Profile</a
-            >
-            <a
-              href="/profile/edit"
-              class="hover:text-blue-200 transition font-semibold"
-              >Edit Profile</a
-            >
-            <a
-              href="/auth/logout"
-              class="hover:text-blue-200 transition font-semibold"
-              >Logout</a
-            >
+
+          <!-- Desktop Navigation (hidden on mobile) -->
+          <div class="hidden md:flex items-center space-x-6">
+            <a href="/" class="hover:text-blue-200 transition font-semibold">
+              <i class="fas fa-home mr-1"></i> Home
+            </a>
+            <a href="/profile/<%= currentUser.username %>" class="hover:text-blue-200 transition font-semibold">
+              <i class="fas fa-user mr-1"></i> My Profile
+            </a>
+            <a href="/profile/edit" class="hover:text-blue-200 transition font-semibold">
+              <i class="fas fa-edit mr-1"></i> Edit Profile
+            </a>
+            <a href="/auth/logout" class="hover:text-blue-200 transition font-semibold">
+              <i class="fas fa-sign-out-alt mr-1"></i> Logout
+            </a>
           </div>
-          <div class="text-sm">
+
+          <!-- Desktop User Info (hidden on mobile) -->
+          <div class="hidden md:block text-sm">
             Welcome, <strong><%= currentUser.displayName %></strong>!
+          </div>
+
+          <!-- Mobile Hamburger Menu Button (visible only on mobile) -->
+          <button
+            id="mobile-menu-button"
+            class="md:hidden text-white focus:outline-none"
+            onclick="toggleMobileMenu()"
+            aria-label="Toggle menu"
+          >
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+
+        <!-- Mobile Navigation Menu (hidden by default, shown when hamburger is clicked) -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4 pt-2">
+          <div class="flex flex-col space-y-3">
+            <div class="text-sm pb-2 border-b border-blue-400">
+              <i class="fas fa-user-circle mr-2"></i>
+              Welcome, <strong><%= currentUser.displayName %></strong>!
+            </div>
+            <a href="/" class="hover:text-blue-200 transition font-semibold py-2 px-2 rounded hover:bg-blue-700">
+              <i class="fas fa-home mr-2"></i> Home
+            </a>
+            <a href="/profile/<%= currentUser.username %>" class="hover:text-blue-200 transition font-semibold py-2 px-2 rounded hover:bg-blue-700">
+              <i class="fas fa-user mr-2"></i> My Profile
+            </a>
+            <a href="/profile/edit" class="hover:text-blue-200 transition font-semibold py-2 px-2 rounded hover:bg-blue-700">
+              <i class="fas fa-edit mr-2"></i> Edit Profile
+            </a>
+            <a href="/auth/logout" class="hover:text-blue-200 transition font-semibold py-2 px-2 rounded hover:bg-blue-700">
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
           </div>
         </div>
       </div>
     </nav>
+
+    <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const button = document.getElementById('mobile-menu-button');
+        const icon = button.querySelector('i');
+        
+        menu.classList.toggle('hidden');
+        
+        // Toggle icon between bars and X
+        if (menu.classList.contains('hidden')) {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        } else {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        }
+      }
+    </script>
 
     <div class="container mx-auto px-4 py-8">
       <div class="text-center mb-12">
