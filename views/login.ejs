@@ -85,57 +85,95 @@
 
         <script>
           function fillUsername(value, button) {
-            const usernameField = document.getElementById('username');
+            const usernameField = document.getElementById("username");
             usernameField.value = value;
             usernameField.focus();
-            
+
             // Visual feedback
             const originalText = button.textContent;
-            button.textContent = '✓ Filled!';
-            button.classList.add('bg-green-200', 'text-green-800', 'border-green-400');
-            button.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300');
-            
+            button.textContent = "✓ Filled!";
+            button.classList.add(
+              "bg-green-200",
+              "text-green-800",
+              "border-green-400"
+            );
+            button.classList.remove(
+              "bg-blue-100",
+              "text-blue-800",
+              "border-blue-300"
+            );
+
             setTimeout(() => {
               button.textContent = originalText;
-              button.classList.remove('bg-green-200', 'text-green-800', 'border-green-400');
-              button.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+              button.classList.remove(
+                "bg-green-200",
+                "text-green-800",
+                "border-green-400"
+              );
+              button.classList.add(
+                "bg-blue-100",
+                "text-blue-800",
+                "border-blue-300"
+              );
             }, 1500);
           }
 
           function fillPassword(value, button) {
-            const passwordField = document.getElementById('password');
+            const passwordField = document.getElementById("password");
             passwordField.value = value;
             passwordField.focus();
-            
+
             // Visual feedback
             const originalText = button.textContent;
-            button.textContent = '✓ Filled!';
-            button.classList.add('bg-green-200', 'text-green-800', 'border-green-400');
-            button.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300');
-            
+            button.textContent = "✓ Filled!";
+            button.classList.add(
+              "bg-green-200",
+              "text-green-800",
+              "border-green-400"
+            );
+            button.classList.remove(
+              "bg-blue-100",
+              "text-blue-800",
+              "border-blue-300"
+            );
+
             setTimeout(() => {
               button.textContent = originalText;
-              button.classList.remove('bg-green-200', 'text-green-800', 'border-green-400');
-              button.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+              button.classList.remove(
+                "bg-green-200",
+                "text-green-800",
+                "border-green-400"
+              );
+              button.classList.add(
+                "bg-blue-100",
+                "text-blue-800",
+                "border-blue-300"
+              );
             }, 1500);
           }
 
           function fillAllCredentials(username, password, button) {
-            fillUsername(username, document.querySelector('button[onclick*="fillUsername"]'));
+            fillUsername(
+              username,
+              document.querySelector('button[onclick*="fillUsername"]')
+            );
             setTimeout(() => {
-              fillPassword(password, document.querySelector('button[onclick*="fillPassword"]'));
+              fillPassword(
+                password,
+                document.querySelector('button[onclick*="fillPassword"]')
+              );
             }, 100);
-            
+
             // Visual feedback for "Fill All" button
             const originalText = button.textContent;
-            button.textContent = '✓ All Filled!';
-            button.classList.add('bg-green-600', 'hover:bg-green-700');
-            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            
+            button.textContent = "✓ All Filled!";
+            button.classList.add("bg-green-600", "hover:bg-green-700");
+            button.classList.remove("bg-blue-600", "hover:bg-blue-700");
+
             setTimeout(() => {
               button.textContent = originalText;
-              button.classList.remove('bg-green-600', 'hover:bg-green-700');
-              button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+              button.classList.remove("bg-green-600", "hover:bg-green-700");
+              button.classList.add("bg-blue-600", "hover:bg-blue-700");
             }, 2000);
           }
         </script>
@@ -195,4 +233,3 @@
     </div>
   </body>
 </html>
- 

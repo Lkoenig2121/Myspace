@@ -100,9 +100,30 @@ const friendQueries = {
     LIMIT 8
   `),
 
+  getAllFriends: db.prepare(`
+    SELECT u.id, u.username, u.display_name, f.position
+    FROM friendships f
+    JOIN users u ON f.friend_id = u.id
+    WHERE f.user_id = ?
+    ORDER BY (f.position IS NULL), f.position ASC, u.display_name ASC
+  `),
+
+  isFriend: db.prepare(`
+    SELECT 1 FROM friendships WHERE user_id = ? AND friend_id = ? LIMIT 1
+  `),
+
+  getNextTop8Position: db.prepare(`
+    SELECT COALESCE(MAX(position), 0) + 1 AS next_pos
+    FROM friendships WHERE user_id = ? AND position IS NOT NULL AND position <= 8
+  `),
+
   addFriend: db.prepare(`
     INSERT INTO friendships (user_id, friend_id, position)
     VALUES (?, ?, ?)
+  `),
+
+  removeFriend: db.prepare(`
+    DELETE FROM friendships WHERE user_id = ? AND friend_id = ?
   `),
 
   updatePosition: db.prepare(`

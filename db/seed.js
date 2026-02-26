@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { userQueries, profileQueries, friendQueries } = require("./database");
-
+         
 // Data for generating 98 additional users (demo + tom = 2, so 98 more = 100 total)
 const FIRST_NAMES = [
   "Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Avery", "Quinn",

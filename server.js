@@ -27,7 +27,7 @@ app.use(
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
-  })
+  }),
 );
 
 // View engine
@@ -48,4 +48,3 @@ app.listen(PORT, async () => {
   // Seed database with demo user
   await seedDatabase();
 });
- 
