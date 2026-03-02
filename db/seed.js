@@ -1,36 +1,165 @@
 const bcrypt = require("bcryptjs");
-const { userQueries, profileQueries, friendQueries } = require("./database");
-         
+const {
+  db,
+  userQueries,
+  profileQueries,
+  friendQueries,
+  activityQueries,
+} = require("./database");
+
 // Data for generating 98 additional users (demo + tom = 2, so 98 more = 100 total)
 const FIRST_NAMES = [
-  "Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Avery", "Quinn",
-  "Skyler", "Jamie", "Dakota", "Reese", "Parker", "Blair", "Cameron", "Drew",
-  "Ashley", "Brittany", "Chad", "Tiffany", "Jessica", "Mike", "Sarah", "Chris",
-  "Katie", "Nick", "Emily", "Matt", "Lauren", "Justin", "Amanda", "Brandon",
-  "Stephanie", "Ryan", "Megan", "Josh", "Rachel", "Andrew", "Samantha", "Daniel",
-  "Nicole", "Kevin", "Heather", "Jason", "Jennifer", "Eric", "Lisa", "Brian",
-  "Michelle", "Adam", "Melissa", "Nathan", "Angela", "Travis", "Christina",
-  "Kyle", "Rebecca", "Marcus", "Laura", "Derek", "Kimberly", "Corey", "Amy",
-  "Zach", "Lindsey", "Tyler", "Brittney", "Cody", "Hannah", "Jake", "Olivia",
-  "Dylan", "Emma", "Logan", "Grace", "Hunter", "Chloe", "Blake", "Lily",
-  "Cole", "Zoey", "Hayden", "Natalie", "Peyton", "Victoria", "Sage", "Brooklyn",
+  "Alex",
+  "Jordan",
+  "Taylor",
+  "Morgan",
+  "Casey",
+  "Riley",
+  "Avery",
+  "Quinn",
+  "Skyler",
+  "Jamie",
+  "Dakota",
+  "Reese",
+  "Parker",
+  "Blair",
+  "Cameron",
+  "Drew",
+  "Ashley",
+  "Brittany",
+  "Chad",
+  "Tiffany",
+  "Jessica",
+  "Mike",
+  "Sarah",
+  "Chris",
+  "Katie",
+  "Nick",
+  "Emily",
+  "Matt",
+  "Lauren",
+  "Justin",
+  "Amanda",
+  "Brandon",
+  "Stephanie",
+  "Ryan",
+  "Megan",
+  "Josh",
+  "Rachel",
+  "Andrew",
+  "Samantha",
+  "Daniel",
+  "Nicole",
+  "Kevin",
+  "Heather",
+  "Jason",
+  "Jennifer",
+  "Eric",
+  "Lisa",
+  "Brian",
+  "Michelle",
+  "Adam",
+  "Melissa",
+  "Nathan",
+  "Angela",
+  "Travis",
+  "Christina",
+  "Kyle",
+  "Rebecca",
+  "Marcus",
+  "Laura",
+  "Derek",
+  "Kimberly",
+  "Corey",
+  "Amy",
+  "Zach",
+  "Lindsey",
+  "Tyler",
+  "Brittney",
+  "Cody",
+  "Hannah",
+  "Jake",
+  "Olivia",
+  "Dylan",
+  "Emma",
+  "Logan",
+  "Grace",
+  "Hunter",
+  "Chloe",
+  "Blake",
+  "Lily",
+  "Cole",
+  "Zoey",
+  "Hayden",
+  "Natalie",
+  "Peyton",
+  "Victoria",
+  "Sage",
+  "Brooklyn",
 ];
 
 const LOCATIONS = [
-  "Los Angeles, CA", "New York, NY", "Chicago, IL", "Houston, TX", "Phoenix, AZ",
-  "Philadelphia, PA", "San Antonio, TX", "San Diego, CA", "Dallas, TX",
-  "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Columbus, OH", "Charlotte, NC",
-  "Seattle, WA", "Denver, CO", "Boston, MA", "Nashville, TN", "Portland, OR",
-  "Las Vegas, NV", "Miami, FL", "Atlanta, GA", "Minneapolis, MN", "Orlando, FL",
-  "The Internet", "MySpace HQ", "Cleveland, OH", "Tampa, FL", "Detroit, MI",
-  "Brooklyn, NY", "San Francisco, CA", "Austin, TX", "Seattle, WA", "Denver, CO",
+  "Los Angeles, CA",
+  "New York, NY",
+  "Chicago, IL",
+  "Houston, TX",
+  "Phoenix, AZ",
+  "Philadelphia, PA",
+  "San Antonio, TX",
+  "San Diego, CA",
+  "Dallas, TX",
+  "San Jose, CA",
+  "Austin, TX",
+  "Jacksonville, FL",
+  "Columbus, OH",
+  "Charlotte, NC",
+  "Seattle, WA",
+  "Denver, CO",
+  "Boston, MA",
+  "Nashville, TN",
+  "Portland, OR",
+  "Las Vegas, NV",
+  "Miami, FL",
+  "Atlanta, GA",
+  "Minneapolis, MN",
+  "Orlando, FL",
+  "The Internet",
+  "MySpace HQ",
+  "Cleveland, OH",
+  "Tampa, FL",
+  "Detroit, MI",
+  "Brooklyn, NY",
+  "San Francisco, CA",
+  "Austin, TX",
+  "Seattle, WA",
+  "Denver, CO",
 ];
 
 const MOODS = [
-  "chillin", "excited", "nostalgic", "friendly", "happy", "bored", "creative",
-  "tired", "hopeful", "silly", "curious", "relaxed", "pumped", "chill",
-  "blessed", "grateful", "vibing", "living my best life", "missing 2005",
-  "listening to music", "coding", "scrolling", "online", "away",
+  "chillin",
+  "excited",
+  "nostalgic",
+  "friendly",
+  "happy",
+  "bored",
+  "creative",
+  "tired",
+  "hopeful",
+  "silly",
+  "curious",
+  "relaxed",
+  "pumped",
+  "chill",
+  "blessed",
+  "grateful",
+  "vibing",
+  "living my best life",
+  "missing 2005",
+  "listening to music",
+  "coding",
+  "scrolling",
+  "online",
+  "away",
 ];
 
 const BIOS = [
@@ -58,18 +187,19 @@ const BIOS = [
 
 async function seedDatabase() {
   try {
-    // Check if we already have enough users
     const allUsers = userQueries.getAll.all();
-    if (allUsers.length >= 100) {
-      console.log("Database already has 100+ users. Skipping seed.");
-      return;
+    const skipUserCreation = allUsers.length >= 100;
+    if (skipUserCreation) {
+      console.log("Database already has 100+ users. Skipping user creation.");
     }
 
-    const defaultHashedPassword = await bcrypt.hash("password123", 10);
+    const defaultHashedPassword = skipUserCreation
+      ? null
+      : await bcrypt.hash("password123", 10);
 
     // 1. Demo user (only if not exists)
     let demoUserId = (userQueries.findByUsername.get("demo") || {}).id;
-    if (!demoUserId) {
+    if (!skipUserCreation && !demoUserId) {
       const demoUser = userQueries.create.run(
         "demo",
         "demo@myspace.com",
@@ -118,7 +248,7 @@ async function seedDatabase() {
 
     // 2. Tom (only if not exists)
     let tomUserId = (userQueries.findByUsername.get("tom") || {}).id;
-    if (!tomUserId) {
+    if (!skipUserCreation && !tomUserId) {
       const hashedTest = await bcrypt.hash("test123", 10);
       const testUser = userQueries.create.run(
         "tom",
@@ -144,30 +274,109 @@ async function seedDatabase() {
     }
 
     // 3–100: Create 98 more users (user3, user4, ... user100)
-    for (let i = 3; i <= 100; i++) {
-      const username = `user${i}`;
-      const email = `user${i}@myspace.com`;
-      const nameIndex = (i - 3) % FIRST_NAMES.length;
-      const displayName = FIRST_NAMES[nameIndex];
+    if (!skipUserCreation) {
+      for (let i = 3; i <= 100; i++) {
+        const username = `user${i}`;
+        const email = `user${i}@myspace.com`;
+        const nameIndex = (i - 3) % FIRST_NAMES.length;
+        const displayName = FIRST_NAMES[nameIndex];
 
-      const bio = BIOS[Math.floor(Math.random() * BIOS.length)];
-      const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+        const bio = BIOS[Math.floor(Math.random() * BIOS.length)];
+        const location =
+          LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
-      try {
-        const result = userQueries.create.run(
-          username,
-          email,
-          defaultHashedPassword,
-          displayName,
-        );
-        profileQueries.create.run(result.lastInsertRowid, bio, location);
-      } catch (err) {
-        if (err.message && err.message.includes("UNIQUE")) {
-          // User already exists (e.g. from previous partial seed), skip
-        } else {
-          throw err;
+        try {
+          const result = userQueries.create.run(
+            username,
+            email,
+            defaultHashedPassword,
+            displayName,
+          );
+          profileQueries.create.run(result.lastInsertRowid, bio, location);
+        } catch (err) {
+          if (err.message && err.message.includes("UNIQUE")) {
+            // User already exists (e.g. from previous partial seed), skip
+          } else {
+            throw err;
+          }
         }
       }
+    }
+
+    // Friend Updates feed: seed sample activities (runs even if user creation was skipped) for demo and tom (so feed has multiple posts)
+    const demoId = (userQueries.findByUsername.get("demo") || {}).id;
+    const tomId = (userQueries.findByUsername.get("tom") || {}).id;
+    const existingActivities = db
+      .prepare("SELECT COUNT(*) AS n FROM activities")
+      .get();
+    if (existingActivities.n < 15 && demoId && tomId) {
+      const samplePosts = [
+        {
+          userId: demoId,
+          type: "blog_post",
+          content:
+            "Just set up my MySpace again. Who else is still out there? 🎵",
+        },
+        {
+          userId: tomId,
+          type: "profile_update",
+          content: "updated their profile",
+          extra: JSON.stringify({ mood: "friendly" }),
+        },
+        {
+          userId: demoId,
+          type: "blog_post",
+          content: "Profile song: Darude - Sandstorm. No regrets.",
+        },
+        {
+          userId: tomId,
+          type: "blog_post",
+          content: "Thanks for being my friend! Hit me up anytime.",
+        },
+        {
+          userId: demoId,
+          type: "blog_post",
+          content: "Custom HTML section is finally done. Peak 2007 energy.",
+        },
+        {
+          userId: demoId,
+          type: "profile_update",
+          content: "updated their profile",
+          extra: JSON.stringify({ mood: "nostalgic" }),
+        },
+        {
+          userId: tomId,
+          type: "blog_post",
+          content: "MySpace HQ checking in. Add me if we're not friends yet!",
+        },
+        {
+          userId: demoId,
+          type: "blog_post",
+          content:
+            "If you're reading this, leave a comment on my profile. Old school style.",
+        },
+        {
+          userId: tomId,
+          type: "profile_update",
+          content: "updated their profile",
+          extra: null,
+        },
+        {
+          userId: demoId,
+          type: "blog_post",
+          content:
+            "Discover People page is legit. Go add some friends and check the Friend Updates feed!",
+        },
+      ];
+      for (const row of samplePosts) {
+        activityQueries.create.run(
+          row.userId,
+          row.type,
+          row.content,
+          row.extra,
+        );
+      }
+      console.log("✅ Seeded Friend Updates with sample posts.");
     }
 
     console.log("✅ Database seeded with 100 users!");

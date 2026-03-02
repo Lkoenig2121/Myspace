@@ -7,6 +7,7 @@ const SQLiteStore = require("connect-sqlite3")(session);
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const homeRoutes = require("./routes/home");
+const feedRoutes = require("./routes/feed");
 const { seedDatabase } = require("./db/seed");
 
 const app = express();
@@ -36,6 +37,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // Routes
 app.use("/", homeRoutes);
+app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
 

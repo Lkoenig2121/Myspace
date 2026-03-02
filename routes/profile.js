@@ -3,6 +3,7 @@ const {
   userQueries,
   profileQueries,
   friendQueries,
+  activityQueries,
 } = require("../db/database");
 
 const router = express.Router();
@@ -121,6 +122,13 @@ router.post("/update", requireAuth, (req, res) => {
     profileSong || "",
     mood || "chillin",
     location || "",
+  );
+
+  activityQueries.create.run(
+    req.session.userId,
+    "profile_update",
+    "updated their profile",
+    mood ? JSON.stringify({ mood }) : null,
   );
 
   res.redirect(`/profile/${req.session.username}`);

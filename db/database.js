@@ -35,6 +35,16 @@ db.exec(`
     FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(user_id, friend_id)
   );
+
+  CREATE TABLE IF NOT EXISTS activities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    content TEXT,
+    extra TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
 `);
 
 // Helper functions
@@ -131,9 +141,31 @@ const friendQueries = {
   `),
 };
 
+const activityQueries = {
+  create: db.prepare(`
+    INSERT INTO activities (user_id, type, content, extra)
+    VALUES (?, ?, ?, ?)
+  `),
+
+  getFeedForUser: db.prepare(`
+    SELECT a.id, a.user_id, a.type, a.content, a.extra, a.created_at,
+           u.username, u.display_name
+    FROM activities a
+    JOIN users u ON a.user_id = u.id
+    WHERE a.user_id = ?
+       OR EXISTS (
+         SELECT 1 FROM friendships f
+         WHERE f.user_id = ? AND f.friend_id = a.user_id
+       )
+    ORDER BY a.created_at DESC
+    LIMIT 100
+  `),
+};
+
 module.exports = {
   db,
   userQueries,
   profileQueries,
   friendQueries,
+  activityQueries,
 };
